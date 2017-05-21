@@ -18,23 +18,28 @@
 									.broadcast(tell, planificar_consumo_semanal);
 									.wait(500);
 									for(.range(D, 0, 6)){
-										+pedir_planificacion_diaria(D);										
+										+pedir_planificacion_diaria(D);	
 									}.
 +pedir_planificacion_diaria(D): dia(D,Dia) <-
-			.println("Pidiendo planificación para el dia ", Dia);
+			.println("*******************   Pidiendo planificación para el dia ", Dia, "   *******************");
 			.broadcast(tell, planificacion_del_dia(D));
 			.wait(2000).
 			
-+negociar_energia_dia(_)
++negociar_energia_dia(_,D)
 			:
-			.findall(e(Consumo, Casa), negociar_energia_dia(Consumo)[source(Casa)], ListaConsumoDiarioPorCasa) &
+			dia(D,Dia) &
+			.findall(e(Consumo, Casa), negociar_energia_dia(Consumo, _)[source(Casa)], ListaConsumoDiarioPorCasa) &
 			.length(ListaConsumoDiarioPorCasa,4) //Espero a que lleguen 4 planificaciones
 			<-
-			procesar(ListaConsumoDiarioPorCasa, Mensaje, ListaPrestamos);
+			procesar(ListaConsumoDiarioPorCasa, Dia, Mensaje, ListaPrestamos);
 			.print(Mensaje);
+			if(not .substring("No hace falta", Mensaje)){
+				.print("Enviando resultados de la negociación a cada casa.");
+			}
 			for ( .member(X,ListaPrestamos) ) {
-        .print(X);
-     }.
+        .term2string(T, X);
+        .broadcast(tell, T);
+     	}.
 			
 
 { include("$jacamoJar/templates/common-cartago.asl") }

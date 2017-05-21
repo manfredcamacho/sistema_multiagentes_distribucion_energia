@@ -34,11 +34,21 @@
 				.print("Envié mi planificacion para el dia ", Dia, ", cubrí mi consumo.");
 			}
 		}
-		.send(coordinador, tell, negociar_energia_dia(Consumo));
+		.send(coordinador, tell, negociar_energia_dia(Consumo, D));
 		.wait(500);
 		//Con esto evito el error de perdida de mensajes
-		.send(coordinador, untell, negociar_energia_dia(Consumo)).
+		.send(coordinador, untell, negociar_energia_dia(Consumo, D)).
 		
++prestamo(Origen, Destino, Cantidad, Dia, EnergiaFaltante)
+		:
+			 .my_name(Destino) 
+		<-
+		if(EnergiaFaltante == 0){
+			.print("Recibi un prestamo de energia de ", Origen, " de ", Cantidad, " KW para el dia ",Dia)
+		}else{
+			.print("Recibi un prestamo de energia de ", Origen, " de ", Cantidad, " KW para el dia ",Dia, ", me falto cubrir ",math.abs(EnergiaFaltante)," KW.")
+		}.
+
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

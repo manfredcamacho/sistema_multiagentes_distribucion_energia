@@ -11,13 +11,13 @@ import jason.stdlib.foreach;
 public class CoordinadorArtifact extends Artifact {
 		
 	private ArrayList<String> prestamos;
-	
+	private String dia;
 	void init() {
 		
 	}
 	
 	@OPERATION
-	void procesar(Object[] lista, OpFeedbackParam<String> mensaje, OpFeedbackParam<String []> listaPrestamos){
+	void procesar(Object[] lista, String dia, OpFeedbackParam<String> mensaje, OpFeedbackParam<String []> listaPrestamos){
 		ArrayList<Casa> listaMapeada = mapearLista(lista);
 		Collections.sort(listaMapeada, new Comparator<Casa>(){
 			public int compare(Casa c1, Casa c2) {
@@ -25,6 +25,7 @@ public class CoordinadorArtifact extends Artifact {
 			}
 		});
 		prestamos = new ArrayList<String>(); //se crea una lista vacia para cada dia
+		this.dia = dia.toString();
 		mensaje.set(repartirEnergia(listaMapeada)); //La lista se llena
 		listaPrestamos.set(prestamos.toArray(new String[0]));
 	}
@@ -69,17 +70,17 @@ public class CoordinadorArtifact extends Artifact {
 		}
 		
 		if (cantidadCasasConDeficitEnergia == 0) {
-			respuesta = new String("No hace falta negociar energia este dia");
+			respuesta = new String("No hace falta negociar energia para el dia " + this.dia);
 		}
 		else {//Hay por lo menos una casa con deficit de energia
 			if (energiaNetaTotal == 0) {//Se puede cubrir el deficit
-				respuesta = new String("Es posible cubrir las necesidades de todas las casas.");
+				respuesta = new String("Es posible cubrir las necesidades de todas las casas el dia " + this.dia);
 			}
 			else if (energiaNetaTotal > 0) {//Se puede cubrir el deficit
-				respuesta = new String("Es posible cubrir las necesidades de todas las casas y además tengo " + energiaNetaTotal + " KW de sobra para otra division del barrio.");
+				respuesta = new String("Es posible cubrir las necesidades de todas las casas el dia " + this.dia + " y además tengo " + energiaNetaTotal + " KW de sobra para otra division del barrio.");
 			}
 			else {//Hay por lo menos una casa que puede prestar energia
-				respuesta = new String("No es posible satisfacer  las necesidades de todas las casas, hace falta " + Math.abs(energiaNetaTotal) + " KW.");
+				respuesta = new String("No es posible satisfacer  las necesidades de todas las casas el dia " + this.dia + ", hace falta " + Math.abs(energiaNetaTotal) + " KW.");
 			}
 		}
 		
@@ -99,7 +100,7 @@ public class CoordinadorArtifact extends Artifact {
 				
 				if (energiaFinal == 0) {//Casa1 presto toda su energia extra y la casa 2 cubrio el dia por completo
 					energiaPrestada = energiaCasa1;
-					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+")");
+					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+",\""+ this.dia +"\", 0)");
 					indiceCasa1++;
 					indiceCasa2--;
 					energiaCasa1 = casas.get(indiceCasa1).getConsumo();
@@ -107,14 +108,14 @@ public class CoordinadorArtifact extends Artifact {
 				}
 				else if(energiaFinal > 0){ //la casa2 cubrio el dia por completo y a la casa1 le sigue sobrando energia
 					energiaPrestada = Math.abs(energiaCasa2);
-					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+")");
+					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+",\""+ this.dia +"\", 0)");
 					energiaCasa1 += energiaCasa2;
 					indiceCasa2--;
 					energiaCasa2 = casas.get(indiceCasa2).getConsumo();
 				}
 				else { //La casa1 se quedo sin energia extra y la casa2 sigue con deficit
 					energiaPrestada = energiaCasa1;
-					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+")");
+					prestamos.add("prestamo("+casas.get(indiceCasa1).getNombre()+","+casas.get(indiceCasa2).getNombre()+","+energiaPrestada+",\""+ this.dia +"\", "+(energiaCasa2 + energiaPrestada)+")");
 					indiceCasa1++;
 					energiaCasa1 = casas.get(indiceCasa1).getConsumo();
 					energiaCasa2 += energiaCasa1;
