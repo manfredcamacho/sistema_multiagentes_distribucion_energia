@@ -14,26 +14,22 @@
 
 mas distribucion_de_energia_descentralizado {
 
-		agent coordinador
+		agent coordinador: agente_coordinador.asl
 		
-    agent casa_1 : hogar.asl{
+    agent casa_1 : agente_casa.asl{
     	beliefs: energia_diaria_generada("16")
     }
-    agent casa_2 : hogar.asl{
+    agent casa_2 : agente_casa.asl{
     	beliefs: energia_diaria_generada("22")
     }
-    agent casa_3 : hogar.asl{
+    agent casa_3 : agente_casa.asl{
     	beliefs: energia_diaria_generada("13")
     }
-    agent casa_4 : hogar.asl{
+    agent casa_4 : agente_casa.asl{
     	beliefs: energia_diaria_generada("26")
     }
         
-    
     workspace division_de_barrio {
-        artifact coordinadorArtifact: artefactos.CoordinadorArtifact(){
-            focused-by: coordinador, casa_1, casa_2, casa_3, casa_4
-        }
         artifact casa_1_artifact: artefactos.CasaArtifact(){
         		focused-by:casa_1
         }
@@ -47,6 +43,19 @@ mas distribucion_de_energia_descentralizado {
         		focused-by:casa_4
         }
     }
+    
+    organisation distribucion_energia_org: org.xml { 
+        group barrio: barrioGroup {         
+            players: 	coordinador		agenteCoordinador,
+            					casa_1				agenteCasa,
+            					casa_2				agenteCasa,
+            					casa_3				agenteCasa,
+            					casa_4				agenteCasa
+            debug                          
+        }
+    }
+
+    
 
     // agent source path
     asl-path: src/agt

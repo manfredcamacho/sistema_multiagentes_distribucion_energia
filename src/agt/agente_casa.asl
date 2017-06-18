@@ -1,4 +1,4 @@
-// Agent hogar in project distribucion_de_energia_descentralizado
+// Agent casa in project distribucion_de_energia_descentralizado
 
 /* Initial beliefs and rules */
 	dia(0, "Lunes").
@@ -12,10 +12,8 @@
 
 /* Plans */
 
-+planificar_consumo_semanal <- 
-		planificarConsumoSemanal;
-		.print("Mi planificación semanal esta lista.").
-		
++!planificar_consumo_semanal <- 
+		planificarConsumoSemanal.	
 		
 +planificacion_del_dia(D) <-
 		getConsumoPlanificadoPorDia(D, Consumo);
@@ -48,10 +46,9 @@
 		}else{
 			.print("Recibi un prestamo de energia de ", Origen, " de ", Cantidad, " KW para el dia ",Dia, ", me falto cubrir ",math.abs(EnergiaFaltante)," KW.")
 		}.
+		
 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-
-// uncomment the include below to have a agent that always complies with its organization  
-//{ include("$jacamoJar/templates/org-obedient.asl") }
+{ include("$jacamoJar/templates/org-obedient.asl") }

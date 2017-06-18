@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="http://moise.sourceforge.net/xml/os.xsl" type="text/xsl" ?>
+<organisational-specification
+    id="distribucion_energia"
+    os-version="0.7"
+    xmlns='http://moise.sourceforge.net/os'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://moise.sourceforge.net/os
+                        http://moise.sourceforge.net/xml/os.xsd' >
+
+<structural-specification>
+	<role-definitions>
+	 <role id="agenteCoordinador" />
+	 <role id="agenteCasa" />
+	</role-definitions>
+	
+	<group-specification id="barrioGroup">
+	 <roles>
+	  <role id="agenteCoordinador"  min="1" max="1"/>
+	  <role id="agenteCasa" min="2" max="50"/>
+	 </roles>
+	</group-specification>
+</structural-specification>
+
+<functional-specification>
+ <scheme id="distribucion_sch">
+   <goal id="distribuir_energia">
+   <argument id="Id" />
+    <plan operator="sequence">
+    	 <goal id="pedir_planificaciones_diarias"    ttf="10 seconds" />
+      <goal id="planificar_consumo_semanal" ttf="10 seconds"/>
+    </plan>
+   </goal>
+   <mission id="mCoordinador" min="1" max="1">
+     <goal id="pedir_planificaciones_diarias" />
+   </mission>
+   <mission id="mAgenteCasa" min="1" >
+     <goal id="planificar_consumo_semanal" />
+   </mission>
+ </scheme>
+</functional-specification>
+
+<normative-specification>
+  <norm id="n1"  type="obligation"   role="agenteCoordinador"   mission="mCoordinador" />
+  <norm id="n2"  type="obligation"   role="agenteCasa"  mission="mAgenteCasa" />
+</normative-specification>
+
+</organisational-specification>

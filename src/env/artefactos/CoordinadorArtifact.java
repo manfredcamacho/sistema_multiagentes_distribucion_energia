@@ -2,11 +2,9 @@
 
 package artefactos;
 
-import java.lang.reflect.Array;
-import java.util.*;
 
+import java.util.*;
 import cartago.*;
-import jason.stdlib.foreach;
 
 public class CoordinadorArtifact extends Artifact {
 		
@@ -46,6 +44,7 @@ public class CoordinadorArtifact extends Artifact {
 		
 		int totalDeCasas = casas.size();
 		int cantidadCasasConDeficitEnergia = 0;
+		@SuppressWarnings("unused")
 		int cantidadCasasConExedenteEnergia = 0;
 		int energiaNetaTotal = 0;
 		

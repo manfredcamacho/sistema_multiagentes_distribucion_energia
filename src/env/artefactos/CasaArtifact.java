@@ -10,22 +10,16 @@ public class CasaArtifact extends Artifact {
 	
 	void init(int initialValue) {
 		planificarConsumoSemanal();
-		//defineObsProperty("running", true);
 	}
 	
 	@OPERATION
 	void getConsumoPlanificadoPorDia(int dia,OpFeedbackParam<Integer> consumo){
+		planificarConsumoSemanal();
 		consumo.set(this.consumoSemanal[dia]);
 	}
 	
 	@OPERATION
 	void planificarConsumoSemanal(){
-		//La idea es que dependiendo del valor de casa lea el archivo 
-		//correspondiente a esa casa y planifique el consumo
-		
-		//Valores precalculados para la 4ta semana en base al consumo 
-		//de las 3 semanas anteriores.
-		//Para mas detalles revisar excel adjunto
 		String casa = this.getCurrentOpAgentId().getAgentName(); 
 				
 		if (casa.equals("casa_1"))
